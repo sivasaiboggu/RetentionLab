@@ -1,0 +1,67 @@
+# Reviewer guide
+
+## System boundary
+
+This repository is a local research workbench, not a live customer system.
+The Streamlit page reads frozen evidence and computes only explicitly labeled
+local views. It does not retrain on startup, contact customers, send feedback,
+write to a remote account or require an API key.
+
+```text
+data/ + sql/       -> src/retentionlab/pipeline.py -> artifacts/
+                                                   |
+                         manifest verification + population checks
+                                                   |
+                                Streamlit + Plotly / local CSV export
+```
+
+- `src/retentionlab/pipeline.py`: source cleaning, split, fitting and evaluation.
+- `src/retentionlab/evidence.py`: artifact integrity and dashboard read boundary.
+- `streamlit_app.py`: presentation, controls and filtered downloads.
+- `dashboard.css`: readable original UI styling; font data lives in `assets/fonts/fonts.css`.
+- `scripts/verify_artifacts.py`: no-training evidence check.
+- `tests/`: model-boundary, workflow and Streamlit AppTest regressions.
+- `docs/`: source attribution, protocols and review decisions.
+
+## Decisions worth challenging
+
+| Decision | Reason | Cost / unresolved risk |
+|---|---|---|
+| Group identical observable profiles | Prevent duplicate profiles leaking across evaluation/calibration | A grouped random split still cannot replace a temporal or external test |
+| Choose model by validation AP | Ranking is the decision problem; avoid choosing on holdout | The selected model is not best on every holdout metric |
+| Explain a separate random forest | Keep the explanation model explicit and reproducible | SHAP is not a direct explanation of the calibrated XGBoost winner |
+| Binary budget optimization | A contact is selected or not; no fractional customers | Effect, value and cost are scenario assumptions, not measured interventions |
+| Retain a simple local dashboard | Fast inspection without sending data to a service | No collaboration, permissions, live connectors or production audit log |
+
+## What to verify first
+
+1. The feature exclusions and repeated-profile grouping in the data card.
+2. `artifacts/splits.json`, model selection field and untouched holdout metrics.
+3. Scenario behavior at zero budget/effect; solver agreement with brute force.
+4. The weaker holdout F1 of the validation-selected winner is not hidden.
+5. AP, ROC-AUC and risk ranking are not treated as causal uplift or revenue.
+
+## Reproduction contract
+
+The manifest is a versioned checksum map for the displayed evidence bundle.
+Checks run before a bundle enters Streamlit's immutable cache. Every rerun
+compares the current bundle fingerprint with that cache key; changed files are
+rechecked. Hashes detect accidental corruption or mixed outputs, not malicious
+authorship. A person able to replace the files and manifest can replace both.
+
+Use Python 3.10 and the exact pinned dependencies. Training writes generated
+artifacts and local SQLite files, so rerun in a disposable clone when reviewing.
+Compare the generated artifacts and split IDs to the committed checkpoint.
+Never tune to remove an unfavorable holdout result. The dashboard SHA-256 files are an integrity checkpoint, not digital signatures.
+A dashboard cache invalidates on artifact byte changes; no periodic source polling
+is involved.
+
+Optional browser tests
+require local Chrome and a separate Playwright workspace; Python tests do not.
+
+## Before calling this production-ready
+
+External data validation, genuine independent review, privacy/security design,
+monitoring, access control, operational ownership and deployment verification
+remain separate work. Passing synthetic and AppTest checks does not establish
+those properties. No production release is part of this checkpoint.

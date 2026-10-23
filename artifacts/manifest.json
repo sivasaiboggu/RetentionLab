@@ -1,0 +1,8 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "results.json": "2ebb3f0774a332a721e74dbe7ce0150b76cdee7316c4ebab695ea988de09ec1b",
+    "holdout_scores.csv": "6a4ea84c7b85fae1d9d8a61fb53a833e72439eddccc81f9a0963896f4d8a6459",
+    "splits.json": "20bd63e10896cee11b00f3f82a093a51b32a4f87783bd58e3fa244e19f4b8bbd"
+  }
+}

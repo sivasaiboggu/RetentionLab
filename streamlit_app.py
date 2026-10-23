@@ -1,7 +1,6 @@
 """Artifact-only Streamlit decision dashboard. No model training or cloud writes."""
 
 from pathlib import Path
-import json
 import sys
 import pandas as pd
 import plotly.express as px
@@ -10,6 +9,7 @@ import streamlit as st
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
 from retentionlab.optimization import optimize_targets
+from retentionlab.evidence import load_dashboard, bundle_fingerprint
 
 NAVY, ORANGE, WHITE = "#0B1F33", "#FF5A1F", "#FFFFFF"
 st.set_page_config(
@@ -17,7 +17,8 @@ st.set_page_config(
 )
 
 
-st.html("<style>" + (ROOT / "dashboard.css").read_text() + "</style>")
+st.html("<style>" + (ROOT / "assets/fonts/fonts.css").read_text()
+        + (ROOT / "dashboard.css").read_text() + "</style>")
 
 
 def chart(fig):
@@ -41,17 +42,16 @@ def chart(fig):
 
 
 @st.cache_data
-def artifacts():
-    result = json.loads((ROOT / "artifacts/results.json").read_text())
-    rows = pd.read_csv(ROOT / "artifacts/holdout_scores.csv")
-    return result, rows
+def artifacts(fingerprint):
+    """A changed bundle cannot reuse a previously checked cache entry."""
+    return load_dashboard(ROOT)
 
 
 st.html('<div class="masthead"><div class="wordmark"><span class="brandmark">r</span>RetentionLab</div><div class="meta">Research workbench / 01</div></div>\n<div class="hero"><div><div class="eyebrow">Customer intelligence / Iranian telecom</div><h1>Know who might leave.<br><em>Decide what comes next.</em></h1><p>A budget-aware view of churn. From risk ranking to a contact plan, with every assumption left in plain sight.</p></div><div class="hero-aside"><div class="meta">The decision window</div><strong>3 months</strong><p>Between the behavior window and the observed churn outcome.</p></div></div>\n<div class="boundary"><b>Research, not a live system.</b><span>Scenario values are hypothetical units, not actual savings or currency. No offers are sent.</span></div>')
 try:
-    result, rows = artifacts()
-except (OSError, ValueError) as error:
-    st.error("Artifacts are unavailable. Run the pipeline from the README first.")
+    result, rows = artifacts(bundle_fingerprint(ROOT))
+except (OSError, ValueError, KeyError, TypeError):
+    st.error("Evidence bundle is missing or inconsistent. See the README verification steps.")
     st.stop()
 selected_model = result["selected_model"]
 measured = result["models"][selected_model]["holdout"]

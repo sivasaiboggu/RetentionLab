@@ -6,6 +6,10 @@ a binary targeting optimizer and a local decision dashboard.
 
 ![Inspected Streamlit dashboard](docs/streamlit-desktop.png)
 
+**Reviewer map:** [results](#measured-results) · [run](#start-here) ·
+[architecture and decisions](docs/reviewer-guide.md) · [data card](docs/data-card.md) ·
+[design notes](docs/design-notes.md).
+
 ## Problem
 
 Which customers appear likely to churn, and which contacts maximize expected net
@@ -37,26 +41,43 @@ band, contact cost = 10 + 2 × charge band. These are invented scenario inputs,
 not observed revenue or INR/USD. At zero intervention effect it selects nobody.
 **Observed savings: unavailable. Causal uplift: not estimated.**
 
-## Run locally
+## Start here
 
-Python 3.10 was used. No paid account, cloud or API key is needed.
+Python 3.10, CPU only. No cloud account, provider key or paid service is needed.
+The checked-in artifacts are sufficient to explore the dashboard. Training is a
+separate, explicit command, not part of app startup.
 
 ```sh
 python -m venv .venv
 . .venv/bin/activate
-pip install -r requirements.txt
-# Pinned source CSV is included under its CC BY 4.0 license.
-# Optional checksum-verified refresh:
-python scripts/download_data.py
-PYTHONPATH=src python -m retentionlab.pipeline
-PYTHONPATH=src python -m unittest discover -s tests -v
-python -m http.server 8770 --bind 127.0.0.1
-# Open http://127.0.0.1:8770/dashboard/
+python -m pip install -r requirements.txt
+python scripts/verify_artifacts.py
+streamlit run streamlit_app.py --server.address 127.0.0.1 --server.port 8780
+# Open http://127.0.0.1:8780
 ```
 
-The primary dashboard is now Streamlit + Plotly Express, reading the same frozen
-artifacts. The original HTML dashboard remains as a local fallback. Neither is Power BI or Tableau. No public deployment, Databricks run,
-Azure Data Factory integration or demo video has been completed.
+### Reproduce and test
+
+```sh
+# Source data is pinned and attributed; download is optional.
+python scripts/download_data.py
+PYTHONPATH=src python -m retentionlab.pipeline
+python scripts/verify_artifacts.py
+PYTHONPATH=src python -m unittest discover -s tests -v
+```
+
+The verification command checks the versioned SHA-256 manifest and population
+constraints before the app reads the evidence. It catches mixed/missing files;
+it does not authenticate a dataset author or make a retrained model equivalent.
+If a rerun differs, inspect the source checksum, dependency versions, split IDs
+and generated diff. Do not replace the manifest merely to silence a failure.
+Review and version any intentional new evidence separately, without selecting
+against the existing holdout. See [reviewer guide](docs/reviewer-guide.md).
+
+The primary UI is Streamlit + Plotly. Optional HTML fallback:
+`python -m http.server 8770 --bind 127.0.0.1`, then `/dashboard/`.
+Neither UI is Power BI or Tableau. Cloud deployment, Databricks, Azure Data
+Factory and a demo video have not been completed.
 
 ## Pipeline and safeguards
 
@@ -140,3 +161,12 @@ Design references, used for direction rather than copied templates:
 [Recent](https://recent.design), [Font In Logo](https://fontinlogo.com), and
 [Footer Design](https://footer.design). The interface is an original local
 implementation, not an endorsement or a purchased template.
+
+## Checks and change policy
+
+The GitHub Actions workflow verifies the committed evidence and runs the Python
+tests on Python 3.10. It never trains, replaces artifacts or deploys. Local test
+results are reported separately; a new workflow is not a claim that hosted CI
+has already passed. Intentional evidence updates need a reviewed artifact diff,
+source/split provenance and a separate evaluation decision. Presentation changes
+should not change data/model files or the metrics they display.

@@ -1,15 +1,35 @@
-# Dashboard design choices
+# Dashboard design decisions
 
-Reviewed user-suggested references on 2026-10-23:
+The page is a research workbench, not a marketing template. The numbers,
+uncertainty and next analyst action should be readable before decoration.
 
-- https://backgrounds.supply: a paid background collection. No purchase, download
-  or licensed asset reuse. The dashboard uses original CSS gradients instead.
-- https://iconly.design: icon discovery reference. No external icon assets copied.
-- https://60fps.design: interaction-detail reference. Used as inspiration for
-  visible state, focus and restrained motion, not as copied code or imagery.
+## Reference review, 2026-10-23
 
-Analytics content takes priority: readable numbers, visible caveats, a small
-color palette, mobile stacking, labeled controls and keyboard focus. No CDN
-fonts or third-party trackers are required. Motion respects reduced-motion.
-Adding a library is not itself evidence of better quality; the existing CPU
-data libraries do the substantive work.
+| Reference | Direction taken | What was not reused |
+|---|---|---|
+| [Landdding](https://landdding.com), [Godly](https://godly.website), [Recent](https://recent.design) | Distinct type hierarchy, whitespace and deliberate sections | No template markup, screenshots or copied layout assets |
+| [Font In Logo](https://fontinlogo.com) | Contrast display, interface and metadata type roles | No logo or trademark copied |
+| [Footer Design](https://footer.design) | Quiet closing rule and compact metadata | No decorative footer that distracts from analysis |
+| [Modulify](https://modulify.ai) | Consistent reusable surface patterns | No account, generated site or paid builder required |
+| [Motion](https://motionin.design) | One short entrance instead of constant movement | No premium interactive sections, scroll hijacking or autoplay |
+| [Wonderlist](https://wonderlist.design) | Consistent spacing and reusable surface rules | Paid Figma packs were not purchased or copied |
+| [Iconly](https://iconly.design) | Small, coherent mark rather than an icon collage | No app icons/trademarks copied; letter marks are original CSS |
+| [On Design](https://on.design) | Cohesion across related product screens | No external product UI or assets copied |
+| [60fps](https://60fps.design) | Hover/focus feedback and visible control state | No inaccessible motion-heavy interactions |
+| [Backgrounds Supply](https://backgrounds.supply) | Restraint: flat analytical canvas | No paid backgrounds downloaded or reused |
+
+Instrument Serif, DM Sans and DM Mono are embedded locally under their OFL
+licenses in `assets/fonts/`. No font CDN or tracker is needed. Navy/orange/white
+remain the base palette; muted text and rules use alpha, not new accent colors.
+
+Four metrics become a two-by-two mobile grid. Four charts keep short titles.
+The table remains horizontally scrollable within its own frame rather than
+breaking document width. Numbered sections, thin rules and chart panels create
+rhythm without adding a sidebar or extra pages. Focus rings stay visible, and
+reduced-motion disables entrance animation. Stock Streamlit form/table behavior
+is retained where it supports reliable keyboard use; custom CSS is not a new
+frontend framework. CSS selectors are tied to the pinned Streamlit version and
+must be rechecked during upgrades.
+
+Screenshots were inspected at 1280, 390 and 320 CSS-pixel viewport widths. No
+layout claim substitutes for data or human-validation evidence.
