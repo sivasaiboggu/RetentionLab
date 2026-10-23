@@ -4,7 +4,7 @@ Budget-aware churn prediction and retention scenario planning. Built for a data
 analyst portfolio: SQL features, statistics, model comparison, explainability,
 a binary targeting optimizer and a local decision dashboard.
 
-![Inspected local dashboard](docs/dashboard-desktop.png)
+![Inspected Streamlit dashboard](docs/streamlit-desktop.png)
 
 ## Problem
 
@@ -54,8 +54,8 @@ python -m http.server 8770 --bind 127.0.0.1
 # Open http://127.0.0.1:8770/dashboard/
 ```
 
-The custom HTML dashboard reads generated JSON locally, with segment and budget
-filters. It is not Power BI or Tableau. No public deployment, Databricks run,
+The primary dashboard is now Streamlit + Plotly Express, reading the same frozen
+artifacts. The original HTML dashboard remains as a local fallback. Neither is Power BI or Tableau. No public deployment, Databricks run,
 Azure Data Factory integration or demo video has been completed.
 
 ## Pipeline and safeguards
@@ -104,3 +104,22 @@ and selects no one when the assumed effect is zero. Test with
 `node --test tests/browser/scenario.cjs`; browser interaction regression is
 `node tests/browser/scenario-ui.cjs`. The explorer does not change model metrics
 or contact anyone. Design choices: [notes](docs/design-notes.md).
+
+## Primary Streamlit + Plotly dashboard
+
+```sh
+# From this repository root, after installing requirements.txt:
+streamlit run streamlit_app.py --server.port 8780
+# Open http://127.0.0.1:8780
+```
+
+The single page has four KPI cards, four charts and one filtered table (five
+visuals excluding KPI cards). It uses the requested navy/orange/white theme in
+`.streamlit/config.toml`, with Plotly dark template and 20px chart titles. The
+app reads the existing artifacts, never retrains or tunes the model. Interactive
+filters and downloads do not change the frozen metrics. AppTest regression
+checks are included in the Python test suite. Desktop and mobile rendering
+were inspected. No Streamlit Cloud deployment or new remote service is active.
+
+The original HTML dashboard instructions above remain valid as a fallback;
+new Streamlit work does not claim to add Power BI, Tableau or expert labels.
