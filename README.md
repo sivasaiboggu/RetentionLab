@@ -97,3 +97,10 @@ workspace, start the local server as above, set `NODE_PATH` to that workspace's
 `node_modules`, then run `node tests/browser/smoke.cjs`. `CHROME_BIN` can override
 the system Chrome path. The smoke checks both viewport sizes and dashboard
 filters; screenshots are written to `/tmp`.
+
+The dashboard also includes a local budget/preventable-churn scenario explorer.
+Its exact integer-cost knapsack matches the pipeline MILP at the fixed benchmark
+and selects no one when the assumed effect is zero. Test with
+`node --test tests/browser/scenario.cjs`; browser interaction regression is
+`node tests/browser/scenario-ui.cjs`. The explorer does not change model metrics
+or contact anyone. Design choices: [notes](docs/design-notes.md).
