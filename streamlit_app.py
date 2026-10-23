@@ -5,13 +5,16 @@ import sys
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+import altair as alt
+from streamlit_extras.metric_cards import style_metric_cards
+from streamlit_option_menu import option_menu
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
 from retentionlab.optimization import optimize_targets
 from retentionlab.evidence import load_dashboard, bundle_fingerprint
 
-NAVY, ORANGE, WHITE = "#0B1F33", "#FF5A1F", "#FFFFFF"
+CANVAS, ACCENT, TEXT = "#151D21", "#A8C4A2", "#F3F0E7"
 st.set_page_config(
     page_title="RetentionLab | Decision workbench", page_icon="📊", layout="wide"
 )
@@ -22,15 +25,16 @@ st.html("<style>" + (ROOT / "assets/fonts/fonts.css").read_text()
 
 
 def chart(fig):
+    """Use the same neutral/accent system across all Plotly views."""
     fig.update_layout(
         template="plotly_dark",
         title_font_size=20,
-        paper_bgcolor="#13304D",
-        plot_bgcolor="#13304D",
-        font=dict(family="DM Sans, sans-serif", color=WHITE, size=11),
+        paper_bgcolor="#202B30",
+        plot_bgcolor="#202B30",
+        font=dict(family="DM Sans, sans-serif", color=TEXT, size=11),
         title=dict(font=dict(family="DM Sans, sans-serif", size=20)),
         margin=dict(l=12, r=12, t=66, b=24),
-        colorway=[ORANGE, WHITE],
+        colorway=[ACCENT, TEXT],
         height=340,
     )
     fig.update_xaxes(showgrid=True, gridcolor="rgba(255,255,255,0.07)", zeroline=False)
@@ -74,6 +78,9 @@ with st.container(key="kpi-strip"):
     ):
         col.metric(title, value)
 
+style_metric_cards(background_color="#202B30", border_color="#35413F",
+                   border_left_color="#A8C4A2", border_radius_px=10, box_shadow=False)
+
 st.caption(
     "Metrics stay frozen: 620-row grouped holdout, 80 churners. Models and thresholds were selected on validation, not holdout."
 )
@@ -97,7 +104,7 @@ with left:
             y="Model",
             orientation="h",
             title="Compare risk rankings",
-            color_discrete_sequence=[ORANGE],
+            color_discrete_sequence=[ACCENT],
             range_x=[0, 1],
         )
     )
@@ -115,7 +122,7 @@ with right:
             y="Feature",
             orientation="h",
             title="What shapes the score",
-            color_discrete_sequence=[ORANGE],
+            color_discrete_sequence=[ACCENT],
         )
     )
     st.caption(
@@ -170,7 +177,7 @@ with left:
             y="Expected net units",
             markers=True,
             title="Test the offer assumption",
-            color_discrete_sequence=[ORANGE],
+            color_discrete_sequence=[ACCENT],
         )
     )
     st.caption(
@@ -182,17 +189,17 @@ with right:
     )
     segment_summary["Observed churn (%)"] = segment_summary.churn_rate * 100
     segment_summary["Segment"] = segment_summary.segment.astype(str)
-    chart(
-        px.bar(
-            segment_summary,
-            x="Segment",
-            y="Observed churn (%)",
-            hover_data=["customers"],
-            title="Churn across segments",
-            color_discrete_sequence=[ORANGE],
-            range_y=[0, 100],
-        )
-    )
+    segment_chart = alt.Chart(segment_summary).mark_bar(color=ACCENT, cornerRadiusTopLeft=3, cornerRadiusTopRight=3).encode(
+        x=alt.X("Segment:N", title="Segment"),
+        y=alt.Y("Observed churn (%):Q", scale=alt.Scale(domain=[0, 100])),
+        tooltip=["Segment", alt.Tooltip("Observed churn (%):Q", format=".1f"), "customers"],
+    ).properties(title="Churn across segments", height=290, padding={"left": 16, "right": 22, "top": 18, "bottom": 14}).configure(
+        background="#202B30", font="DM Sans"
+    ).configure_axis(labelColor=TEXT, titleColor=TEXT, gridColor="#35413F", domain=False).configure_title(
+        color=TEXT, fontSize=20, anchor="start", offset=24
+    ).configure_view(strokeOpacity=0)
+    st.altair_chart(segment_chart, use_container_width=True, theme=None)
+
     st.caption(
         "Training-fitted K-Means segments; holdout outcomes shown for retrospective analysis, not available at decision time."
     )
@@ -201,8 +208,12 @@ st.subheader("Holdout decision queue")
 queue = rows.assign(budget_selected=contact).sort_values("risk", ascending=False)
 if segment != "All segments":
     queue = queue[queue.segment.astype(str) == segment]
-selected_only = st.checkbox("Show budget-selected contacts only")
-if selected_only:
+queue_view = option_menu(None, ["All contacts", "Budget selected"],
+    icons=["table", "check2-circle"], orientation="horizontal", key="queue-view",
+    styles={"container":{"background-color":"#202B30","padding":"4px","border-radius":"8px"},
+            "icon":{"color":"#A8C4A2"}, "nav-link":{"font-size":"13px","color":"#F3F0E7","--hover-color":"#35413F"},
+            "nav-link-selected":{"background-color":"#35413F","color":"#F3F0E7"}})
+if queue_view == "Budget selected":
     queue = queue[queue.budget_selected]
 st.dataframe(
     queue[

@@ -19,7 +19,7 @@ uncertainty and next analyst action should be readable before decoration.
 | [Backgrounds Supply](https://backgrounds.supply) | Restraint: flat analytical canvas | No paid backgrounds downloaded or reused |
 
 Instrument Serif, DM Sans and DM Mono are embedded locally under their OFL
-licenses in `assets/fonts/`. No font CDN or tracker is needed. Navy/orange/white
+licenses in `assets/fonts/`. No font CDN or tracker is needed. Graphite/sage/ivory
 remain the base palette; muted text and rules use alpha, not new accent colors.
 
 Four metrics become a two-by-two mobile grid. Four charts keep short titles.
@@ -33,3 +33,13 @@ must be rechecked during upgrades.
 
 Screenshots were inspected at 1280, 390 and 320 CSS-pixel viewport widths. No
 layout claim substitutes for data or human-validation evidence.
+
+## Library revision and Power BI kit
+
+The current palette is graphite #151D21, sage #A8C4A2 and ivory #F3F0E7,
+with a tonal #202B30 surface. It replaces the earlier navy/orange theme.
+`streamlit-extras.metric_cards` styles the KPI cards. `streamlit-option-menu`
+controls the queue population or sorting; it is not decorative navigation.
+Three Plotly charts and one Altair chart keep the same frozen evidence.
+The Power BI JSON theme uses matching colors, but its build kit has not been
+rendered in Desktop and is not a completed PBIX file.

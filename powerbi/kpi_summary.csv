@@ -1,0 +1,2 @@
+source_customers,holdout_average_precision,holdout_roc_auc,top20_churn_capture
+3150,0.8591939100010029,0.9694328703703704,0.9125

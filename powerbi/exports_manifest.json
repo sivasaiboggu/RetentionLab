@@ -1,0 +1,30 @@
+{
+  "source": "../artifacts/ frozen bundle",
+  "exports": {
+    "holdout_decisions.csv": {
+      "rows": 620,
+      "sha256": "ff4f29f3517c1edd9567c24c3bf742e74025c6f56f6b34453397a6de459c7553"
+    },
+    "kpi_summary.csv": {
+      "rows": 1,
+      "sha256": "d30ccc48ebe743942594eb8e227ae3fb8a441ad1f501b0aa5f3c5e4fe14663e8"
+    },
+    "scenario_sensitivity.csv": {
+      "rows": 4,
+      "sha256": "c9f1840e73b89e3d94828f4a754a4225f7bb06c30cd6436ab01517a26f691429"
+    },
+    "shap_attribution.csv": {
+      "rows": 6,
+      "sha256": "599a23a4ed6d6023b80d9d95805f76ed3a1407e26e2ba615e587ffb9c74c987e"
+    },
+    "segment_summary.csv": {
+      "rows": 4,
+      "sha256": "04175b6764748b0cd8067408205c6eaa9d8ecf08da04699ec235ba8b8fcaaa1c"
+    },
+    "model_comparison.csv": {
+      "rows": 4,
+      "sha256": "7f25ec0f7b10e7f2afae2ff50be0e4f2d832c42d74433cdf973783bd2121d0f1"
+    }
+  },
+  "status": "build kit; not a rendered PBIX"
+}

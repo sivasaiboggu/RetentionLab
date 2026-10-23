@@ -1,32 +1,32 @@
 /* Product layout. Font data lives separately under assets/fonts/fonts.css. */
-:root{--ink:#0B1F33;--orange:#FF5A1F;--white:#FFFFFF}
+:root{--ink:#151D21;--orange:#A8C4A2;--white:#F3F0E7}
 html,body,[class*="css"],.stApp,p,label,input,button{font-family:'DM Sans',sans-serif}
-.stApp{background:#0B1F33}
+.stApp{background:#151D21}
 [data-testid="stHeader"]{background:transparent;height:0}
 [data-testid="stToolbar"]{opacity:.3}
 .block-container{max-width:1320px;padding:36px 48px 60px}
 [data-testid="stVerticalBlock"]{gap:1.2rem}
 .masthead{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ffffff26;padding:0 0 24px;margin-bottom:12px;gap:16px}
 .wordmark{font-size:21px;letter-spacing:-.8px;font-weight:600;display:flex;align-items:center;gap:10px}
-.brandmark{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border:1px solid #FF5A1F;color:#FF5A1F;font-size:15px;border-radius:50%;font-weight:400}
+.brandmark{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border:1px solid #A8C4A2;color:#A8C4A2;font-size:15px;border-radius:50%;font-weight:400}
 .meta,.eyebrow,.section-num{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase}
-.meta{opacity:.58}.eyebrow{color:#FF5A1F;margin-bottom:24px}
+.meta{opacity:.58}.eyebrow{color:#A8C4A2;margin-bottom:24px}
 .hero{display:flex;justify-content:space-between;align-items:flex-end;gap:50px;padding:30px 0 34px}
-.hero h1{font-family:'Instrument Serif',Georgia,serif!important;font-weight:400;font-size:clamp(52px,5.8vw,80px);letter-spacing:-2px;line-height:1.01;margin:0;padding:0;color:white}
-.hero h1 em{color:#FF5A1F;font-weight:400}.hero p{color:#ffffffa6;font-size:14px;line-height:1.6;max-width:490px;margin:20px 0 0}
+.hero h1{font-family:'Instrument Serif',Georgia,serif!important;font-weight:400;font-size:clamp(52px,5.8vw,80px);letter-spacing:-2px;line-height:1.01;margin:0;padding:0;color:#F3F0E7}
+.hero h1 em{color:#A8C4A2;font-weight:400}.hero p{color:#ffffffa6;font-size:14px;line-height:1.6;max-width:490px;margin:20px 0 0}
 .hero-aside{border-left:1px solid #ffffff26;padding-left:22px;min-width:175px;padding-bottom:4px}.hero-aside strong{font-family:'Instrument Serif',Georgia,serif;font-size:44px;font-weight:400;display:block;line-height:1.1}.hero-aside p{margin:8px 0 0;font-size:11px;max-width:185px}.hero-aside .meta{font-size:9px;margin-bottom:12px}
-.boundary{display:flex;align-items:flex-start;gap:12px;border-top:1px solid #ffffff1a;border-bottom:1px solid #ffffff1a;padding:14px 0;margin:0 0 8px;font-size:11px;color:#ffffff9e;line-height:1.6}.boundary b{font-weight:500;color:white;white-space:nowrap}
-[data-testid="stMetric"]{background:#13304D;border:1px solid #ffffff13;border-radius:3px;padding:20px 22px 18px;min-height:126px;transition:border-color .2s ease}
-[data-testid="stMetric"]:hover{border-color:#FF5A1F66}
+.boundary{display:flex;align-items:flex-start;gap:12px;border-top:1px solid #ffffff1a;border-bottom:1px solid #ffffff1a;padding:14px 0;margin:0 0 8px;font-size:11px;color:#ffffff9e;line-height:1.6}.boundary b{font-weight:500;color:#F3F0E7;white-space:nowrap}
+[data-testid="stMetric"]{background:#202B30;border:1px solid #ffffff13;border-radius:3px;padding:20px 22px 18px;min-height:126px;transition:border-color .2s ease}
+[data-testid="stMetric"]:hover{border-color:#A8C4A266}
 [data-testid="stMetricLabel"] p{font-size:11px!important;letter-spacing:.15px;color:#ffffffad}
 [data-testid="stMetricValue"]{font-family:'DM Sans',sans-serif;font-size:38px!important;letter-spacing:-1.5px;font-weight:400}
 [data-testid="stCaptionContainer"] p{font-size:11px;line-height:1.65;color:#ffffff80}
-[data-testid="stPlotlyChart"]{background:#13304D;border:1px solid #ffffff13;border-radius:3px;overflow:hidden;padding:7px 4px 0}
+[data-testid="stPlotlyChart"]{background:#202B30;border:1px solid #ffffff13;border-radius:3px;overflow:hidden;padding:7px 4px 0}
 h2,h3{font-family:'DM Sans',sans-serif!important;font-weight:400!important;letter-spacing:-.5px}
 h3{font-size:22px!important;padding-top:24px!important;border-top:1px solid #ffffff26;margin-top:12px!important}
-.section-label{display:flex;gap:18px;align-items:center;margin:34px 0 4px}.section-label .section-num{color:#FF5A1F}.section-label span:last-child{font-size:18px;letter-spacing:-.3px}
+.section-label{display:flex;gap:18px;align-items:center;margin:34px 0 4px}.section-label .section-num{color:#A8C4A2}.section-label span:last-child{font-size:18px;letter-spacing:-.3px}
 .stButton button,.stDownloadButton button,[data-testid="stBaseButton-secondary"]{background:transparent;border:1px solid #ffffff40;border-radius:3px;font-size:12px;transition:border-color .2s}
-.stDownloadButton button:hover{border-color:#FF5A1F;color:#FF5A1F}
+.stDownloadButton button:hover{border-color:#A8C4A2;color:#A8C4A2}
 [data-testid="stExpander"]{border-color:#ffffff26;border-radius:3px}
 label p{font-size:12px!important}
 .footer{margin-top:32px;padding-top:20px;border-top:1px solid #ffffff26;display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#ffffff66;gap:15px}
@@ -44,4 +44,10 @@ label p{font-size:12px!important}
 [data-testid="stMetricLabel"] p{white-space:normal!important;overflow:visible!important;text-overflow:unset!important}
 [data-testid="stMetricLabel"]{min-height:32px;align-items:flex-start}
 
-button:focus-visible,input:focus-visible,[role="combobox"]:focus-visible,a:focus-visible{outline:2px solid #FF5A1F!important;outline-offset:4px!important}
+button:focus-visible,input:focus-visible,[role="combobox"]:focus-visible,a:focus-visible{outline:2px solid #A8C4A2!important;outline-offset:4px!important}
+
+[data-testid="stMetric"]{border-left:1px solid #f3f0e71f!important;border-top:1px solid #f3f0e71f!important;box-shadow:none!important;border-radius:10px!important;background:#202B30!important}
+[data-testid="stPlotlyChart"],[data-testid="stVegaLiteChart"]{border-radius:10px;border:1px solid #f3f0e717;overflow:hidden;background:#202B30}
+[data-testid="stMetricValue"]{color:#A8C4A2}
+.brandmark{border-radius:8px;background:#a8c4a20d}
+.hero h1{letter-spacing:-1.8px}.hero h1 em{color:#A8C4A2}

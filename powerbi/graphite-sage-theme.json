@@ -1,0 +1,11 @@
+{
+  "name": "Graphite Sage Ivory",
+  "dataColors": [
+    "#A8C4A2",
+    "#F3F0E7",
+    "#52655C"
+  ],
+  "background": "#151D21",
+  "foreground": "#F3F0E7",
+  "tableAccent": "#A8C4A2"
+}

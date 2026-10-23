@@ -134,8 +134,8 @@ streamlit run streamlit_app.py --server.port 8780
 # Open http://127.0.0.1:8780
 ```
 
-The single page has four KPI cards, four charts and one filtered table (five
-visuals excluding KPI cards). It uses the requested navy/orange/white theme in
+The single page has four KPI cards, four charts (three Plotly + one Altair) and one filtered table (five
+visuals excluding KPI cards). It uses the requested graphite/sage/ivory theme in
 `.streamlit/config.toml`, with Plotly dark template and 20px chart titles. The
 app reads the existing artifacts, never retrains or tunes the model. Interactive
 filters and downloads do not change the frozen metrics. AppTest regression
@@ -150,11 +150,11 @@ new Streamlit work does not claim to add Power BI, Tableau or expert labels.
 The Streamlit workbench uses an editorial header, Instrument Serif display type,
 DM Sans interface type and DM Mono metadata, bundled as local embedded fonts under
 their SIL Open Font Licenses (see `assets/fonts/`). No external font request or
-paid design asset is required. Navy, orange and white remain the base palette.
+paid design asset is required. Graphite, sage and ivory now form the base palette.
 KPI cards form a four-column desktop strip and two-column mobile grid; chart
 surfaces, form controls, tables and section dividers share the same spacing.
 A short header entrance respects reduced-motion settings. All four KPI values,
-four charts, filters, scenario controls and evidence limits remain in the page.
+four charts (three Plotly + one Altair), filters, scenario controls and evidence limits remain in the page.
 
 Design references, used for direction rather than copied templates:
 [Landdding](https://landdding.com), [Godly](https://godly.website),
@@ -170,3 +170,18 @@ current GitHub token cannot write workflow files. No deployment workflow is
 added. Intentional evidence updates need a reviewed artifact diff, source/split
 provenance and a separate evaluation decision. Presentation changes should not
 change data/model files or the metrics they display.
+
+## Power BI Desktop kit and UI helpers
+
+[Power BI build guide](powerbi/BUILD_GUIDE.md), [data dictionary](powerbi/DATA_DICTIONARY.md)
+and the CSV/theme exports are in `powerbi/`. This is an import/build kit for
+Windows, not an already built or visually verified `.pbix` report. No Power BI
+service publishing or scheduled refresh is configured. Recreate verified exports
+with `python scripts/export_powerbi.py`. The same graphite/sage/ivory palette is
+used in the local Streamlit dashboard and the Power BI theme.
+
+The local app uses `streamlit-extras.metric_cards` for cards and
+`streamlit-option-menu` for a real queue view/order control. Plotly remains
+primary; one Altair chart adds a consistent declarative chart surface. There is
+no Dash layer, no decorative sidebar and no new data/metric claim. The extras
+package has optional component dependencies; only metric styling is used here.

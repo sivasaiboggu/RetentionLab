@@ -14,6 +14,8 @@ class StreamlitTests(unittest.TestCase):
         ).run()
         self.assertEqual(len(app.exception), 0)
         self.assertEqual(len(app.metric), 4)
+        self.assertEqual(len(app.get("plotly_chart")), 3)
+        self.assertEqual(len(app.get("arrow_vega_lite_chart")), 1)
         self.assertEqual(app.metric[1].value, "0.859")
         app.slider[0].set_value(0).run()
         self.assertEqual(len(app.exception), 0)
