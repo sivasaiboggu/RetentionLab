@@ -4,6 +4,8 @@ Budget-aware churn prediction and retention scenario planning. Built for a data
 analyst portfolio: SQL features, statistics, model comparison, explainability,
 a binary targeting optimizer and a local decision dashboard.
 
+![Inspected local dashboard](docs/dashboard-desktop.png)
+
 ## Problem
 
 Which customers appear likely to churn, and which contacts maximize expected net
