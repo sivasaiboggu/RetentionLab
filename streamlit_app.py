@@ -17,26 +17,24 @@ st.set_page_config(
 )
 
 
-st.html(
-    """<style>
-[data-testid="stMetric"]{background:#13304D;border-top:3px solid #FF5A1F;border-radius:8px;padding:16px}
-[data-testid="stAlert"]{background:#13304D;color:#FFFFFF;border-left:3px solid #FF5A1F}
-[data-testid="stAlert"] p,[data-testid="stAlert"] svg{color:#FFFFFF!important;fill:#FFFFFF}
-</style>"""
-)
+st.html("<style>" + (ROOT / "dashboard.css").read_text() + "</style>")
 
 
 def chart(fig):
     fig.update_layout(
         template="plotly_dark",
         title_font_size=20,
-        paper_bgcolor=NAVY,
-        plot_bgcolor=NAVY,
-        font_color=WHITE,
+        paper_bgcolor="#13304D",
+        plot_bgcolor="#13304D",
+        font=dict(family="DM Sans, sans-serif", color=WHITE, size=11),
+        title=dict(font=dict(family="DM Sans, sans-serif", size=20)),
         margin=dict(l=12, r=12, t=66, b=24),
         colorway=[ORANGE, WHITE],
-        height=360,
+        height=340,
     )
+    fig.update_xaxes(showgrid=True, gridcolor="rgba(255,255,255,0.07)", zeroline=False)
+    fig.update_yaxes(showgrid=False, zeroline=False)
+    fig.update_traces(marker_line_width=0, selector=dict(type="bar"))
     st.plotly_chart(
         fig, use_container_width=True, theme=None, config={"displayModeBar": False}
     )
@@ -49,12 +47,7 @@ def artifacts():
     return result, rows
 
 
-st.caption("RETENTIONLAB / BUDGET-AWARE CHURN DECISIONS")
-st.title("Predict risk. Plan the next decision.")
-st.write("One operator. Nine months of behavior. A three-month planning gap.")
-st.write(
-    "Research portfolio, not a live customer system. Scenario values are hypothetical units, not actual savings or currency. No offers are sent."
-)
+st.html('<div class="masthead"><div class="wordmark"><span class="brandmark">r</span>RetentionLab</div><div class="meta">Research workbench / 01</div></div>\n<div class="hero"><div><div class="eyebrow">Customer intelligence / Iranian telecom</div><h1>Know who might leave.<br><em>Decide what comes next.</em></h1><p>A budget-aware view of churn. From risk ranking to a contact plan, with every assumption left in plain sight.</p></div><div class="hero-aside"><div class="meta">The decision window</div><strong>3 months</strong><p>Between the behavior window and the observed churn outcome.</p></div></div>\n<div class="boundary"><b>Research, not a live system.</b><span>Scenario values are hypothetical units, not actual savings or currency. No offers are sent.</span></div>')
 try:
     result, rows = artifacts()
 except (OSError, ValueError) as error:
@@ -62,27 +55,30 @@ except (OSError, ValueError) as error:
     st.stop()
 selected_model = result["selected_model"]
 measured = result["models"][selected_model]["holdout"]
-cols = st.columns(4)
-for col, title, value in zip(
-    cols,
-    [
-        "Source customers",
-        "Holdout average precision",
-        "Holdout ROC-AUC",
-        "Top-20% churn capture",
-    ],
-    [
-        f"{result['rows']:,}",
-        f"{measured['average_precision']:.3f}",
-        f"{measured['roc_auc']:.3f}",
-        f"{100 * result['holdout_top_20_percent_churn_capture']:.2f}%",
-    ],
-):
-    col.metric(title, value)
+with st.container(key="kpi-strip"):
+    cols = st.columns(4)
+    for col, title, value in zip(
+        cols,
+        [
+            "Source customers",
+            "Holdout average precision",
+            "Holdout ROC-AUC",
+            "Top-20% churn capture",
+        ],
+        [
+            f"{result['rows']:,}",
+            f"{measured['average_precision']:.3f}",
+            f"{measured['roc_auc']:.3f}",
+            f"{100 * result['holdout_top_20_percent_churn_capture']:.2f}%",
+        ],
+    ):
+        col.metric(title, value)
+
 st.caption(
     "Metrics stay frozen: 620-row grouped holdout, 80 churners. Models and thresholds were selected on validation, not holdout."
 )
 
+st.html('<div class="section-label"><span class="section-num">01 /</span><span>Understand the risk</span></div>')
 left, right = st.columns(2)
 with left:
     comparison = pd.DataFrame(
@@ -100,7 +96,7 @@ with left:
             x="Average precision",
             y="Model",
             orientation="h",
-            title="Risk ranking beats<br>the prior baseline",
+            title="Compare risk rankings",
             color_discrete_sequence=[ORANGE],
             range_x=[0, 1],
         )
@@ -118,7 +114,7 @@ with right:
             x="Mean absolute SHAP",
             y="Feature",
             orientation="h",
-            title="Complaints lead<br>tree attribution",
+            title="What shapes the score",
             color_discrete_sequence=[ORANGE],
         )
     )
@@ -173,7 +169,7 @@ with left:
             x="Preventable churn (%)",
             y="Expected net units",
             markers=True,
-            title="Value depends on<br>assumed offer effect",
+            title="Test the offer assumption",
             color_discrete_sequence=[ORANGE],
         )
     )
@@ -192,7 +188,7 @@ with right:
             x="Segment",
             y="Observed churn (%)",
             hover_data=["customers"],
-            title="Observed churn varies<br>by segment",
+            title="Churn across segments",
             color_discrete_sequence=[ORANGE],
             range_y=[0, 100],
         )
@@ -248,6 +244,4 @@ with st.expander("Data boundaries, methods and provenance"):
         "UCI dataset and citation",
         "https://archive.ics.uci.edu/dataset/563/iranian+churn+dataset",
     )
-st.caption(
-    "Streamlit + Plotly Express / artifact-only local app / no public deployment"
-)
+st.html('<div class="footer"><span>RetentionLab / Research edition</span><span>Frozen evidence · Local workspace · No deployment</span></div>')

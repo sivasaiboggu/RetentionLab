@@ -123,3 +123,20 @@ were inspected. No Streamlit Cloud deployment or new remote service is active.
 
 The original HTML dashboard instructions above remain valid as a fallback;
 new Streamlit work does not claim to add Power BI, Tableau or expert labels.
+
+### Dashboard design
+
+The Streamlit workbench uses an editorial header, Instrument Serif display type,
+DM Sans interface type and DM Mono metadata, bundled as local embedded fonts under
+their SIL Open Font Licenses (see `assets/fonts/`). No external font request or
+paid design asset is required. Navy, orange and white remain the base palette.
+KPI cards form a four-column desktop strip and two-column mobile grid; chart
+surfaces, form controls, tables and section dividers share the same spacing.
+A short header entrance respects reduced-motion settings. All four KPI values,
+four charts, filters, scenario controls and evidence limits remain in the page.
+
+Design references, used for direction rather than copied templates:
+[Landdding](https://landdding.com), [Godly](https://godly.website),
+[Recent](https://recent.design), [Font In Logo](https://fontinlogo.com), and
+[Footer Design](https://footer.design). The interface is an original local
+implementation, not an endorsement or a purchased template.
