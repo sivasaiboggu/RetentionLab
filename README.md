@@ -164,9 +164,9 @@ implementation, not an endorsement or a purchased template.
 
 ## Checks and change policy
 
-The GitHub Actions workflow verifies the committed evidence and runs the Python
-tests on Python 3.10. It never trains, replaces artifacts or deploys. Local test
-results are reported separately; a new workflow is not a claim that hosted CI
-has already passed. Intentional evidence updates need a reviewed artifact diff,
-source/split provenance and a separate evaluation decision. Presentation changes
-should not change data/model files or the metrics they display.
+Run the evidence verification and Python test commands above before changing
+presentation. A hosted CI workflow is not installed in this checkpoint: the
+current GitHub token cannot write workflow files. No deployment workflow is
+added. Intentional evidence updates need a reviewed artifact diff, source/split
+provenance and a separate evaluation decision. Presentation changes should not
+change data/model files or the metrics they display.
