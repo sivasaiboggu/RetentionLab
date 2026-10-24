@@ -99,3 +99,14 @@ class EvidenceTests(unittest.TestCase):
                 (root / "artifacts/manifest.json").write_text(json.dumps(manifest))
                 for check in [verify_bundle,bundle_fingerprint]:
                     with self.assertRaises(ValueError):check(root)
+
+
+    def test_rehashed_split_overlap_and_population_mismatch_are_rejected(self):
+        for mutation in ["overlap", "population"]:
+            with tempfile.TemporaryDirectory() as folder:
+                root=Path(folder);shutil.copytree(ROOT / "artifacts",root / "artifacts")
+                splits=json.loads((root / "artifacts/splits.json").read_text())
+                if mutation=="overlap":splits["train"][0]=splits["holdout"][0]
+                else:splits["holdout"][0]=-999999
+                self.rewrite_fixture(root,"splits.json",json.dumps(splits))
+                with self.assertRaisesRegex(ValueError,"overlap|holdout IDs"):load_dashboard(root)

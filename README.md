@@ -207,3 +207,12 @@ a fixed no-plan message rather than raw solver details. Two synthetic regression
 exercise invalid success vectors and failure paths. Frozen risk scores, evaluation
 metrics and the hypothetical preventable-fraction assumption remain unchanged;
 this does not turn scenario value into measured causal savings.
+
+
+### Frozen split membership
+
+Dashboard loading also checks unique integer split IDs, disjoint train/validation/
+holdout membership, and exact agreement between displayed rows and frozen holdout
+IDs. Matching file hashes alone no longer admit a semantically mixed population.
+One additional regression per project mutates only disposable split fixtures;
+real split assignments, metrics and labels remain unchanged.

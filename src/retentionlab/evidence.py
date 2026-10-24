@@ -57,4 +57,16 @@ def load_dashboard(root: Path):
         raise ValueError("Invalid frozen holdout population")
     if not rows.risk.between(0, 1).all() or not rows.churn.isin([0, 1]).all():
         raise ValueError("Invalid holdout scores")
+    splits = json.loads((root / "artifacts/splits.json").read_text())
+    if not isinstance(splits, dict) or set(splits) != {"train", "validation", "holdout"}:
+        raise ValueError("Invalid frozen split structure")
+    populations = []
+    for ids in splits.values():
+        if not isinstance(ids, list) or any(not isinstance(value, int) or isinstance(value, bool) for value in ids) or len(ids) != len(set(ids)):
+            raise ValueError("Invalid frozen split IDs")
+        populations.append(set(ids))
+    if any(populations[a] & populations[b] for a, b in [(0, 1), (0, 2), (1, 2)]):
+        raise ValueError("Frozen splits overlap")
+    if set(splits["holdout"]) != set(rows.customer_id):
+        raise ValueError("Displayed population does not match frozen holdout IDs")
     return result, rows
