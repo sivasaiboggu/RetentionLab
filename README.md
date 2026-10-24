@@ -185,3 +185,14 @@ The local app uses `streamlit-extras.metric_cards` for cards and
 primary; one Altair chart adds a consistent declarative chart surface. There is
 no Dash layer, no decorative sidebar and no new data/metric claim. The extras
 package has optional component dependencies; only metric styling is used here.
+
+
+### Required evidence coverage
+
+Dashboard verification and cache fingerprinting now require the manifest to name
+every artifact the dashboard consumes. Removing a metric file from the manifest
+can no longer make an unverified file appear checked. Manifest containers and
+SHA-256 values are validated before reading files. Two synthetic regressions
+cover omitted required files and malformed manifests. Frozen artifacts, splits,
+metrics and Power BI exports are unchanged. This checks accidental bundle mixing,
+not authenticity against an actor who can replace both source and manifest.

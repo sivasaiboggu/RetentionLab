@@ -79,3 +79,23 @@ class EvidenceTests(unittest.TestCase):
             self.rewrite_fixture(root, "holdout_scores.csv", rows.to_csv(index=False))
             with self.assertRaisesRegex(ValueError, "population"):
                 load_dashboard(root)
+
+
+    def test_manifest_must_cover_every_required_evidence_file(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);shutil.copytree(ROOT / "artifacts",root / "artifacts")
+            path=root / "artifacts/manifest.json";manifest=json.loads(path.read_text())
+            del manifest["files"]["results.json"];path.write_text(json.dumps(manifest))
+            for check in [verify_bundle,bundle_fingerprint]:
+                with self.assertRaisesRegex(ValueError,"omits required"):
+                    check(root)
+
+    def test_malformed_manifest_shapes_and_digest_values_fail_closed(self):
+        variants=[[],{"algorithm":"sha256","files":[]},{"algorithm":"sha256","files":{"results.json":42}},
+                  {"algorithm":"sha256","files":{"results.json":"not-a-digest"}}]
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);(root / "artifacts").mkdir()
+            for manifest in variants:
+                (root / "artifacts/manifest.json").write_text(json.dumps(manifest))
+                for check in [verify_bundle,bundle_fingerprint]:
+                    with self.assertRaises(ValueError):check(root)

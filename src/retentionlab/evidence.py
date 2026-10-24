@@ -6,32 +6,43 @@ who can replace both the files and manifest can replace this evidence too.
 from pathlib import Path
 import hashlib
 import json
+import re
 import pandas as pd
+
+
+REQUIRED_FILES = frozenset(['results.json', 'holdout_scores.csv', 'splits.json'])
+
+
+def checked_entries(root: Path) -> dict:
+    manifest = json.loads((root / "artifacts/manifest.json").read_text())
+    if not isinstance(manifest, dict) or manifest.get("algorithm") != "sha256":
+        raise ValueError("Invalid artifact manifest")
+    entries = manifest.get("files")
+    if not isinstance(entries, dict) or not entries:
+        raise ValueError("Invalid artifact manifest files")
+    for name, expected in entries.items():
+        if not isinstance(name, str) or Path(name).name != name or name in (".", "..") or "\\" in name:
+            raise ValueError("Invalid artifact filename")
+        if not isinstance(expected, str) or re.fullmatch(r"[0-9a-f]{64}", expected) is None:
+            raise ValueError("Invalid artifact checksum")
+    if not REQUIRED_FILES.issubset(entries):
+        raise ValueError("Manifest omits required evidence files")
+    return entries
 
 
 def verify_bundle(root: Path) -> None:
     """Reject incomplete/mixed artifact bundles before displaying their metrics."""
-    manifest = json.loads((root / "artifacts/manifest.json").read_text())
-    if manifest.get("algorithm") != "sha256" or not manifest.get("files"):
-        raise ValueError("Invalid artifact manifest")
-    for name, expected in manifest["files"].items():
-        # Manifests name flat artifact files, never paths outside the bundle.
-        if Path(name).name != name or name in (".", ".."):
-            raise ValueError("Invalid artifact filename")
+    for name, expected in checked_entries(root).items():
         actual = hashlib.sha256((root / "artifacts" / name).read_bytes()).hexdigest()
         if actual != expected:
             raise ValueError(f"Artifact checksum mismatch: {name}")
 
 
 def bundle_fingerprint(root: Path) -> str:
-    """Key cached reads by the actual bytes, including accidental bundle edits."""
-    digest = hashlib.sha256()
-    manifest = root / "artifacts/manifest.json"
-    digest.update(manifest.read_bytes())
-    entries = json.loads(manifest.read_text()).get("files", {})
+    """Key cached reads by validated manifest coverage and actual artifact bytes."""
+    entries = checked_entries(root)
+    digest = hashlib.sha256((root / "artifacts/manifest.json").read_bytes())
     for name in sorted(entries):
-        if Path(name).name != name or name in (".", ".."):
-            raise ValueError("Invalid artifact filename")
         digest.update(name.encode())
         digest.update((root / "artifacts" / name).read_bytes())
     return digest.hexdigest()
