@@ -54,3 +54,20 @@ class PipelineTests(unittest.TestCase):
         ]:
             with self.assertRaises(ValueError):
                 optimize_targets(*args)
+
+
+    def test_solver_success_flag_does_not_admit_invalid_target_vectors(self):
+        from unittest.mock import patch
+        from types import SimpleNamespace
+        for vector in [[float('nan')],[.25],[2],[],[0,1]]:
+            with patch('retentionlab.optimization.milp',return_value=SimpleNamespace(success=True,x=vector)):
+                with self.assertRaisesRegex(RuntimeError,'invalid target plan'):
+                    optimize_targets([.8],[100],[10],20)
+
+    def test_solver_failure_does_not_return_a_plan_or_raw_details(self):
+        from unittest.mock import patch
+        from types import SimpleNamespace
+        with patch('retentionlab.optimization.milp',return_value=SimpleNamespace(success=False,message='private solver detail')):
+            with self.assertRaisesRegex(RuntimeError,'No target plan') as caught:
+                optimize_targets([.8],[100],[10],20)
+            self.assertNotIn('private',str(caught.exception))

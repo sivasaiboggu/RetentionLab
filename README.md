@@ -196,3 +196,14 @@ SHA-256 values are validated before reading files. Two synthetic regressions
 cover omitted required files and malformed manifests. Frozen artifacts, splits,
 metrics and Power BI exports are unchanged. This checks accidental bundle mixing,
 not authenticity against an actor who can replace both source and manifest.
+
+
+### Optimizer output checks
+
+A solver success flag is no longer enough to display a target plan: its returned
+vector must have the expected length, finite binary entries and a feasible budget.
+Non-finite scenario objectives are rejected before solving. Solver failures return
+a fixed no-plan message rather than raw solver details. Two synthetic regressions
+exercise invalid success vectors and failure paths. Frozen risk scores, evaluation
+metrics and the hypothetical preventable-fraction assumption remain unchanged;
+this does not turn scenario value into measured causal savings.
